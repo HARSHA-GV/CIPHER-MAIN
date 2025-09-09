@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monoalphabetic Cipher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #264653;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #e9c46a;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #f4a261;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monoalphabetic Cipher</h1>
+    <div class="container">
+        <textarea id="inputText" placeholder="Enter text to encrypt or decrypt..."></textarea>
+        <input type="text" id="cipherKey" placeholder="Enter Cipher Key (default will be generated)" />
+        <button onclick="monoAlphabeticCipher()">Encrypt / Decrypt</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Generate a random key based on the alphabet
+        function generateRandomKey() {
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            let key = alphabet.split('');
+            for (let i = key.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [key[i], key[j]] = [key[j], key[i]]; // Swap elements
+            }
+            return key.join('');
+        }
+
+        // Default cipher key (auto-generated on page load)
+        const defaultKey = generateRandomKey();
+        document.getElementById("cipherKey").value = defaultKey;
+
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
+        function monoAlphabeticCipher() {
+            let inputText = document.getElementById("inputText").value.toUpperCase();
+            let cipherKey = document.getElementById("cipherKey").value.toUpperCase();
+            let resultText = "";
+
+            // Ensure the cipher key is exactly 26 characters (if not, use the default one)
+            if (cipherKey.length !== 26 || !/[A-Z]/.test(cipherKey)) {
+                cipherKey = defaultKey;
+                document.getElementById("cipherKey").value = defaultKey;
+            }
+
+            // Loop through each character of the input text
+            for (let i = 0; i < inputText.length; i++) {
+                let char = inputText[i];
+
+                // Encrypt or decrypt if alphabetic
+                if (alphabet.includes(char)) {
+                    let charIndex = alphabet.indexOf(char);
+                    resultText += cipherKey[charIndex];
+                } 
+                // Preserve non-alphabet characters (like spaces or punctuation)
+                else {
+                    resultText += char;
+                }
+            }
+
+            document.getElementById("result").innerText = resultText;
+        }
+    </script>
+</body>
+</html>
